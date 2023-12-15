@@ -1,0 +1,53 @@
+{
+    "name": "bypikod/laravel-localization",
+    "description": "Localization library for laravel that uses database to store translations.",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "framework",
+        "localization",
+        "translation",
+        "locale",
+        "database",
+        "dynamic"
+    ],
+    "homepage": "https://github.com/ByPikod/laravel-localization",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yahya Batulu",
+            "email": "contact@yahyabatulu.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^8.0||^9.0||^10.0",
+        "laravel/legacy-factories": "^1.3"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0|^8.0",
+        "phpunit/phpunit": "^9.0|^10.0",
+        "mockery/mockery": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ByPikod\\Localization\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ByPikod\\Localization\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ByPikod\\Localization\\LocalizationServiceProvider"
+            ]
+        }
+    }
+}
