@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Translation extends Model
 {
     protected $guarded = [];
+    protected $fillable = ['name', 'value', 'locale'];
 
     public function __construct(array $attributes = [])
     {
