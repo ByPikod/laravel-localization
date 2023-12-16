@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create(config('localization.database.translations_table'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('locale', 5)->index();
-            $table->string('namespace')->nullable()->index();
-            $table->string('key')->index();
+            $table->string('name')->index();
             $table->text('value')->nullable();
-            $table->timestamps();
-            $table->unique(['locale', 'namespace', 'key']);
+            $table->unique(['locale', 'key']);
         });
     }
 
