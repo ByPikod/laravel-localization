@@ -30,9 +30,16 @@
         "mockery/mockery": "^1.0.0"
     },
     "autoload": {
+        "files": [
+            "./src/helpers.php"
+        ],
         "psr-4": {
             "ByPikod\\Localization\\": "src"
-        }
+        },
+        "classmap": [
+            "database/migrations",
+            "database/factories"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
