@@ -23,14 +23,27 @@ class LocalizationServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfiguration();
+        $this->registerBindings();
         $this->registerBladeDirectives();
+    }
+
+    /**
+     * Register package bindings in the container
+     * @return void
+     */
+    protected function registerBindings(): void
+    {
+        $this->app->singleton(Localizer::class, function ($app) {
+            $translation = new Translation();
+            return new Localizer($app, $translation);
+        });
     }
 
     /**
      * Merge the package configuration with the application configuration
      * @return array
      */
-    public function mergeConfiguration(): void
+    protected function mergeConfiguration(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/localization.php', 'localization');
     }
@@ -38,10 +51,12 @@ class LocalizationServiceProvider extends ServiceProvider
     /**
      * Register blade directives
      */
-    public function registerBladeDirectives(): void
+    protected function registerBladeDirectives(): void
     {
-        Blade::directive('t', function ($expression) {
-            return "<?php \$translations[] = '$expression' ?>";
+        Blade::directive('t', function ($key) {
+            $localizer = app(Localizer::class);
+            $localizer->fetchTranslation($key, app()->getLocale());
+            return "<?php echo getCachedTranslation('$key') ?>";
         });
     }
 
@@ -49,7 +64,7 @@ class LocalizationServiceProvider extends ServiceProvider
      * Load migrations that creates database tables
      * @return array
      */
-    public function loadMigrations(): void
+    protected function loadMigrations(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
     }
