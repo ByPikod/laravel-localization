@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('locale', 5)->index();
             $table->string('name')->index();
             $table->text('value')->nullable();
-            $table->unique(['locale', 'key']);
+            $table->unique(['locale', 'name']);
         });
     }
 

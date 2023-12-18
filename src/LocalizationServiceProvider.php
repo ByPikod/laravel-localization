@@ -33,7 +33,7 @@ class LocalizationServiceProvider extends ServiceProvider
      */
     protected function registerBindings(): void
     {
-        $this->app->singleton(Localizer::class, function ($app) {
+        $this->app->singleton("localizer", function ($app) {
             $translation = new Translation();
             return new Localizer($app, $translation);
         });
@@ -50,13 +50,41 @@ class LocalizationServiceProvider extends ServiceProvider
 
     /**
      * Register blade directives
+     * @return void
      */
     protected function registerBladeDirectives(): void
     {
-        Blade::directive('t', function ($key) {
-            $localizer = app(Localizer::class);
-            $localizer->fetchTranslation($key, app()->getLocale());
-            return "<?php echo getCachedTranslation('$key') ?>";
+        /**
+         * Blade directive @t
+         * This directive is used to print translations in blade templates.
+         * It calls addQueue() before printing getCachedTranslation().
+         * addQueue adds translation to the queue of translations to be queried from database.
+         * and after page is entirely rendered all translations are queried from database
+         * to be cached in localizer singleton using fetchTranslations(). fetchTranslations() called
+         * automatically after the response is prepared by Laravel. But in case you are not using
+         * Laravel Router you should call fetchTranslations() manually.
+         * Then the PHP code in the rendered page is executed and getCachedTranslation() is called for
+         * each translation.
+         */
+        Blade::directive('t', function ($expression) {
+            /**
+             * Simulate PHP function parameters for blade directive @t
+             * This function is used to parse the arguments of blade directive @t
+             */
+            $simulateParametersForT = function (string $key, string $locale = null) {
+                $localizer = app("localizer");
+                $localizer->addQueue($key, $locale);
+                if ($locale === null) {
+                    return "<?php echo getCachedTranslation('" . $key . "') ?>";
+                }
+                return "<?php echo getCachedTranslation('" . $key . "', '" . $locale . "') ?>";
+            };
+            try {
+                $result = eval("return \$simulateParametersForT($expression);");
+                return $result;
+            } catch (\Throwable $th) {
+                throw new \Exception("Failed to execute blade directive @t: " . $th->__toString());
+            }
         });
     }
 

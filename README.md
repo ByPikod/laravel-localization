@@ -66,6 +66,30 @@ Here is an example of how to use the `updateTranslation` helper function:
 updateTranslation('home.title', 'Home', 'en');
 ```
 
+And if you want to update the translations in bulk, you can use the `updateTranslations` helper function as in the example below:
+
+```php
+updateTranslations([
+    'home.title' => 'Home',
+    'home.description' => 'This is the description of the home page.',
+], 'en');
+```
+
+Also it is possible to update the translations in bulk with multiple languages as in the example below:
+
+```php
+updateTranslations([
+    'home.title' => [
+        'en' => 'Home',
+        'tr' => 'Anasayfa',
+    ],
+    'home.description' => [
+        'en' => 'This is the description of the home page.',
+        'tr' => 'Bu anasayfanın açıklamasıdır.',
+    ],
+]);
+```
+
 It is that simple to use **ByPikod\LaravelLocalization**.
 
 ## Why Laravel Localization?
