@@ -70,13 +70,11 @@ It is that simple to use **ByPikod\LaravelLocalization**.
 
 ## Why Laravel Localization?
 
-The common problem with the localization packages that made me create this package is that they don't have an efficient way to fetch the translations from the database. These are the ways that I have seen so far:
+The common problem with the localization packages that made me create this package is that they don't have an efficient way to fetch the translations from the database. Most of them already doesn't fetch the translations from the database. They just use the translations that are already cached in the memory. But that is not a good solution for websites that have a lot of dynamic content that must be updated from the database. These are the ways that I have seen so far:
 
-One way is to fetch the translations from the database whenever a function is called. But that is not efficient at all. Because it would get a lot of unnecessary queries to the database. And it would be a huge waste of resource for pages that have a lot of translations.
-
-Another way is we could fetch all the translations from the database at once. But that would be a huge waste of memory since we would have to fetch all the translations at each request even if 90% of them are not used in the document at all.
-
-Another way is to have namespaces that seperates the translations into different groups for each page. But since some pages might have translations in common with other pages, we would still have a little overhead. Despite it is not a big overhead, this solution would also need us to write extra functions that have to determine which namespaces to be fetched from the database for each page. And that would be a waste of time for small projects. Even if this wasn't a bad solution, I was still too lazy to write extra code. I wanted a library that would be efficient and easy to use at the same time.
+* **Fetch Dynamic Content Directly:** One way is to fetch the translations from the database whenever it requested. But that is not efficient at all. Because it would get a lot of unnecessary queries to the database. And it would be a huge waste of resource for pages that have a lot of translations.
+* **Fetch All Translations At Once:** Another way is we could fetch all the translations from the database at once. But that would be a huge waste of memory since we would have to fetch all the translations at each request even if 90% of them are not used in the document at all.
+* **Fetch By Groups:** Another way is to have namespaces that seperates the translations into different groups for each page. But since some pages might have translations in common with other pages, we would still have a little overhead. Despite it is not a big overhead, this solution would also need us to write extra functions that have to determine which namespaces to be fetched from the database for each page. And that would be a waste of time for small projects. Even if this wasn't a bad solution, I was still too lazy to write extra code. I wanted a library that would be efficient and easy to use at the same time.
 
 So I came up with a solution for lazy developers like me. This package only fetches the translations that are used in the document that requested. And it is done efficiently with a single query to the database. So you don't have to worry about the performance of your website.
 
@@ -84,17 +82,12 @@ See [How it works](#how-it-works) section for further information about the inno
 
 ## How it works
 
-**ByPikod\LaravelLocalization** uses a unique method to fetch the translations from the database as I mentioned before.
+**ByPikod\LaravelLocalization** uses a unique method to fetch the translations from the database as I mentioned before. Here is how it works step by step:
 
-First things first, Blade directive `@t` doesnt fetch the translations from the database directly.
-
-When a blade template is rendered, the `@t` directive doesnt fetch the translation from the database directly.
-
-Instead it adds the key of the translation to a collection. Then, it prints a php code that calls the global method `getCachedTranslation` with the key of the translation and the language code as parameters.
-
-Once the blade template is completly rendered, the collection of the translation keys will be retrieved from the database with a single query to the database. Then, the `getCachedTranslation` method will be able to retrieve the translations from the cache.
-
-After that, the PHP rendering process will start and getCachedTranslation functions in the blade templates will be executed. This time, the translations will be retrieved from the cache.
+* First things first, Blade directive `@t` doesnt fetch the translations from the database directly. Instead it adds the key of the translation to a collection.
+* Then, it prints a php code that calls the global method `getCachedTranslation` with the key of the translation and the language code as parameters. But this code wont be executed until the blade template is completly rendered.
+* Once the blade template is completly rendered, the collection of the translation keys will be retrieved from the database with a single query to the database. Then, the `getCachedTranslation` method will be able to retrieve the translations from the cache.
+* After that, the document rendering process will start and getCachedTranslation functions in the blade templates will be executed. And the translations will be retrieved from the cache.
 
 So any translation that is not used in the blade templates will not be retrieved from the database. And there wont be unnecessary queries to the database since the translations will be retrieved at once.
 
@@ -106,6 +99,11 @@ Any ideas or suggestions are also welcome. You can give feedback by creating an 
 
 > [!WARNING]
 > Please make sure you have created appropriate tests for your code before creating a pull request.
+
+### Areas that need contribution
+
+* More tests are always welcome. More tests means more stability.
+* This package needs SQL queries to be efficient as much as possible. Optimizing the SQL queries would be a great contribution.
 
 ## License
 
