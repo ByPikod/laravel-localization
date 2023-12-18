@@ -11,14 +11,10 @@
 
 Laravel localization is a solution for making your website entirely **dynamic** and **multilingual** with the easiest way possible.
 
+It detects the translations that are used in the document and fetches them from the database with a single query to the database. This is a efficient way to fetch the translations from the database. It is also very easy to use. You can retrieve the translations with a single blade directive. And you can update the translations with a single helper function.
+
 > [!IMPORTANT]
-> This package is mainly created to update & fetch the **website content** from the database. But it also provides a multi-language support for your website. That way you can easily provide dashboards to your clients that they can update the website content multilingually.
-
-> [!NOTE]
-> Whether you wanna create a multilingual website or not, you can still use this package to update the website content from the database with the easiest way possible.
-
-> [!NOTE]
-> **ByPikod\LaravelLocalization** uses an efficient and easy way to fetch the translations from the database. You can check the [How it works](#how-it-works) section for further information about the innovative methods of **ByPikod\LaravelLocalization**.
+> This package is mainly created to update & fetch the **website content** from the database. This is useful for websites that have a lot of dynamic content that must be updated from the database. [Official Laravel Localization](https://laravel.com/docs/10.x/localization) is still the best solution for static translations that are not updated from the database. You can use both packages at the same time.
 
 ## Table of contents
 
