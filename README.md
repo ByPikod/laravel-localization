@@ -91,6 +91,8 @@ See [How it works](#how-it-works) section for further information about the inno
 
 So any translation that is not used in the blade templates will not be retrieved from the database. And there wont be unnecessary queries to the database since the translations will be retrieved at once.
 
+![How it works](/promotions/laravel-localization.svg)
+
 ## Contribution
 
 Laravel Localization is a new package and it is not perfect yet. So any contributions are welcome. You can contribute to the project by creating a pull request.
@@ -104,6 +106,8 @@ Any ideas or suggestions are also welcome. You can give feedback by creating an 
 
 * More tests are always welcome. More tests means more stability.
 * This package needs SQL queries to be efficient as much as possible. Optimizing the SQL queries would be a great contribution.
+* Code optimization is also welcome. If you have any idea to make the code more efficient, you can create a pull request or an issue.
+* This package is still new and it needs more features. If you have any idea for a new feature, you can create a pull request or an issue.
 
 ## License
 
