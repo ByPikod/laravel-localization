@@ -182,18 +182,7 @@ class LocalizationTest extends TestCase
 
     /** @test */
     // phpcs:ignore
-    public function can_blade_directive_translate()
-    {
-        // Update translation in database
-        updateTranslation('can_blade_translate', 'passed');
-        // Render blade template
-        $rendered = $this->blade('@t("can_blade_translate")'); // Render blade template
-        $rendered->assertSee('passed'); // Assert that rendered template contains the translation
-    }
-
-    /** @test */
-    // phpcs:ignore
-    public function does_autofetch_works() {
+    public function can_translate_view() {
         // push new translation to database
         updateTranslation('does_autofetch_works', 'passed');
         // test
@@ -206,5 +195,28 @@ class LocalizationTest extends TestCase
         $response->assertSeeText('passed');
     }
 
-    // TODO: add tests for fallback locale
+    /** @test */
+    // phpcs:ignore
+    public function can_blade_directive_translate()
+    {
+        // Update translation in database
+        updateTranslation('can_blade_translate', 'passed');
+        // Render blade template
+        $rendered = $this->blade('@t("can_blade_translate")'); // Render blade template
+        $rendered->assertSee('passed'); // Assert that rendered template contains the translation
+    }
+
+    /* @test */
+    // phpcs:ignore
+    public function can_translate_with_fallback()
+    {
+        // Set fallback and default locale
+        $this->app->setFallbackLocale("en");
+        $this->app->setlocale("tr");
+        // Update translation in database
+        updateTranslation('can_blade_translate', 'passed', 'en');
+        // Render blade template
+        $rendered = $this->blade('@t("can_blade_translate")'); // Render blade template
+        $rendered->assertSee('passed'); // Assert that rendered template contains the translation
+    }
 }
