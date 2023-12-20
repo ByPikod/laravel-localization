@@ -7,13 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install Dependencies
-      uses: php-actions/composer@v6
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
       with:
-        php_version: '8.2'
-        args: --profile --ignore-platform-reqs
-        dev: no
-    - name: PHP Unit
+        php-version: '8.2'  # Adjust the PHP version as needed
+        extensions: 'curl, fileinfo, mbstring, pdo_sqlite, sqlite3'  # Add required extensions
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+    - name: Run PHPUnit tests
       run: composer run-script test
-    - name: Lint
+    - name: Run PHPSniffer
       run: composer run-script lint
