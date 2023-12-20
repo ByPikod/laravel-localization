@@ -33,9 +33,10 @@ class LocalizationServiceProvider extends ServiceProvider
      */
     protected function registerBindings(): void
     {
-        $this->app->singleton("localizer", function ($app) {
+        $this->app->singleton("localizer", function () {
             $translation = new Translation();
-            return new Localizer($app, $translation);
+            $localizer = new Localizer($translation);
+            return $localizer;
         });
     }
 

@@ -16,8 +16,6 @@ class LocalizationTest extends TestCase
     use DatabaseMigrations;
     use InteractsWithViews;
 
-    private $translation;
-
     /**
      * Setup the test environment.
      */
@@ -30,7 +28,6 @@ class LocalizationTest extends TestCase
             '--realpath' => realpath(__DIR__ . '/../migrations'),
         ]);
         $this->withFactories(__DIR__ . '/../database/factories');
-        $this->translation = $this->app[Translation::class];
         $this->withoutExceptionHandling();
     }
 
@@ -57,6 +54,10 @@ class LocalizationTest extends TestCase
             LocalizationServiceProvider::class,
         ];
     }
+
+    /**
+     * Database Update Tests
+     */
 
     /** @test */
     // phpcs:ignore
@@ -175,6 +176,10 @@ class LocalizationTest extends TestCase
         ]);
     }
 
+    /**
+     * Database Fetch Tests
+     */
+
     /** @test */
     // phpcs:ignore
     public function can_blade_directive_translate()
@@ -183,7 +188,6 @@ class LocalizationTest extends TestCase
         updateTranslation('can_blade_translate', 'passed');
         // Render blade template
         $rendered = $this->blade('@t("can_blade_translate")'); // Render blade template
-        Localizer::fetchTranslations(); // Fetch translations from database
         $rendered->assertSee('passed'); // Assert that rendered template contains the translation
     }
 

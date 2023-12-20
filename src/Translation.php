@@ -23,7 +23,7 @@ class Translation extends Model
      * @param string $locale The locale of the translations
      * @return array
      */
-    public function getTranslations(array $names, string $locale): array
+    public function getTranslations(array $names, string $locale): \Illuminate\Database\Eloquent\Collection
     {
         return $this->whereIn('name', $names)->where('locale', $locale)->get();
     }

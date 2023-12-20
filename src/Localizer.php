@@ -2,30 +2,22 @@
 
 namespace ByPikod\Localization;
 
-use Illuminate\Foundation\Http\Events\RequestHandled;
-
 /**
  * Singleton class for localization
  */
 class Localizer
 {
-    protected $translation;
-    protected $app;
-    protected $events;
-    protected $fallback_locale;
+    protected $translation; // Translation model
+    protected $fallback_locale; // Language to retrieve if requested key language pair is not found
+    protected $cached = false; // Whether translations are cached or not
 
     // Localization store
-    protected array $queue = [];
-    protected array $cache = [];
+    protected array $queue = []; // Queue of translations to be queried from database
+    protected array $cache = []; // Cached translations
 
-    public function __construct($app, Translation $translation)
+    public function __construct(Translation $translation)
     {
-        $this->app = $app;
         $this->fallback_locale = config('app.fallback_locale');
-        $app["events"]->listen(RequestHandled::class, function () {
-            $this->fetchTranslations();
-        });
-
         $this->translation = $translation;
     }
 
@@ -42,7 +34,10 @@ class Localizer
         // get translations from database locale by locale
         $translations = [];
         foreach ($this->queue as $locale => $names) {
-            $translations[$locale] = $this->translation->getTranslations($names, $locale);
+            $fetch = $this->translation->getTranslations($names, $locale);
+            foreach ($fetch as $translation) {
+                $translations[$locale][$translation->name] = $translation->value;
+            }
         }
         // find missing translations
         $missingTranslations = [];
@@ -57,12 +52,13 @@ class Localizer
         $translations[$this->fallback_locale] = $translations[$this->fallback_locale] ?? [];
         if (count($missingTranslations) > 0) {
             $fallbackTranslations = $this->translation->getTranslations($missingTranslations, $this->fallback_locale);
-            foreach ($missingTranslations as $name) {
-                $translations[$this->fallback_locale][$name] = $fallbackTranslations[$name] ?? $name;
+            foreach ($fallbackTranslations as $translation) {
+                $translations[$this->fallback_locale][$translation->name] = $translation->value;
             }
         }
         // store translations in localizer singleton
         $this->cache = $translations;
+        $this->cached = true;
     }
 
     /**
@@ -73,8 +69,10 @@ class Localizer
      * @param string $locale The locale of the translation
      * @return void
      */
-    public function addQueue($name, $locale): void
+    public function addQueue($name, $locale = null): void
     {
+        // get current locale if not provided
+        $locale = $locale ?? app()->getLocale();
         // create locale array if not exists
         $this->queue[$locale] = $this->queue[$locale] ?? [];
         // add translation to queue
@@ -93,16 +91,10 @@ class Localizer
      */
     public function translate($name, $locale = null): string
     {
+        if (!$this->cached) {
+            $this->fetchTranslations();
+        }
         $locale = $locale ?? app()->getLocale();
-        echo "name: $name, locale: $locale\n";
-        // TODO: Maybe this checks should be done somewhere else
-        // or a better design might be considered
-        if (!isset($this->cache[$locale])) {
-            $this->cache[$locale] = [];
-        }
-        if (!isset($this->cache[$this->fallback_locale])) {
-            $this->cache[$this->fallback_locale] = [];
-        }
         return $this->cache[$locale][$name] ?? $this->cache[$this->fallback_locale][$name] ?? $name;
     }
 
@@ -139,4 +131,29 @@ class Localizer
         }
         $this->translation->bulkUpdate($converted);
     }
+
+    public function isCached(): bool
+    {
+        return $this->cached;
+    }
+
+    // The code below is for debugging purposes only
+
+    /*
+    public array $functionLog = [];
+
+    public function printFunctionLog()
+    {
+        $i = 1;
+        foreach ($this->functionLog as $fn) {
+            echo "#$i: $fn\n";
+            $i++;
+        }
+    }
+
+    public function addFunctionLog(string $fnName, string ...$args)
+    {
+        $this->functionLog[] = $fnName . "(" . implode(", ", $args) . ")";
+    }
+    */
 }
