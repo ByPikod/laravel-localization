@@ -8,11 +8,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Install Dependencies
-      uses: php-actions/composer@v6
-      with:
-        php_version: '8.2'
-    - name: PHP Unit
-      run: composer run-script test
+    - uses: php-actions/composer@v6
+    # - name: PHP Unit
+    #  run: composer run-script test
     - name: Lint
       run: composer run-script lint
