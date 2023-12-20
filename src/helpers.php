@@ -1,5 +1,7 @@
 <?php
 
+use ByPikod\Localization\Facades\Localizer;
+
 if (!function_exists('getCachedTranslation')) {
     /**
      * This function retrieves cached translation from localizer singleton.
@@ -17,7 +19,7 @@ if (!function_exists('getCachedTranslation')) {
      */
     function getCachedTranslation($name, $locale = null): string
     {
-        return \ByPikod\Localization\Facades\Localizer::translate($name, $locale);
+        return Localizer::translate($name, $locale);
     }
 }
 
@@ -32,7 +34,7 @@ if (!function_exists('updateTranslation')) {
      */
     function updateTranslation($name, $value, $locale = null): void
     {
-        \ByPikod\Localization\Facades\Localizer::updateTranslation($name, $value, $locale);
+        Localizer::updateTranslation($name, $value, $locale);
     }
 }
 
@@ -47,6 +49,6 @@ if (!function_exists('updateTranslations')) {
      */
     function updateTranslations(array $translations, $locale = null): void
     {
-        \ByPikod\Localization\Facades\Localizer::updateTranslations($translations, $locale);
+        Localizer::updateTranslations($translations, $locale);
     }
 }
