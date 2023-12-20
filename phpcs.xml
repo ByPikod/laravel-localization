@@ -4,4 +4,6 @@
     <rule ref="PSR12">
         <exclude name="Generic.ControlStructures.InlineControlStructure.NotAllowed" />
     </rule>
+    <exclude-pattern>/vendor/*</exclude-pattern>
+    <exclude-pattern>*.blade.php</exclude-pattern>
 </ruleset>
