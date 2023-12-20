@@ -2,9 +2,7 @@
 
 namespace ByPikod\Localization\Tests;
 
-use ByPikod\Localization\Facades\Localizer;
 use ByPikod\Localization\LocalizationServiceProvider;
-use ByPikod\Localization\Translation;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
