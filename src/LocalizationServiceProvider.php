@@ -67,12 +67,15 @@ class LocalizationServiceProvider extends ServiceProvider
          * each translation.
          */
         Blade::directive('t', function ($expression) {
+            $localizer = app("localizer");
             /**
              * Simulate PHP function parameters for blade directive @t
              * This function is used to parse the arguments of blade directive @t
              */
-            $simulateParametersForT = function (string $key, string $locale = null) {
-                $localizer = app("localizer");
+            $simulateParametersForT = function (
+                string $key,
+                string $locale = null
+            ) use ($localizer) {
                 $localizer->addQueue($key, $locale);
                 if ($locale === null) {
                     return "<?php echo getCachedTranslation('" . $key . "') ?>";

@@ -96,6 +96,7 @@ class Localizer
         $locale = $locale ?? app()->getLocale();
         echo "name: $name, locale: $locale\n";
         // TODO: Maybe this checks should be done somewhere else
+        // or a better design might be considered
         if (!isset($this->cache[$locale])) {
             $this->cache[$locale] = [];
         }

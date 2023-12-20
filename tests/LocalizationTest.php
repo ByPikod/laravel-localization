@@ -2,6 +2,7 @@
 
 namespace ByPikod\Localization\Tests;
 
+use ByPikod\Localization\Facades\Localizer;
 use ByPikod\Localization\LocalizationServiceProvider;
 use ByPikod\Localization\Translation;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
@@ -181,9 +182,8 @@ class LocalizationTest extends TestCase
         // Update translation in database
         updateTranslation('can_blade_translate', 'passed');
         // Render blade template
-        $localizer = app("localizer"); // Get localizer singleton
         $rendered = $this->blade('@t("can_blade_translate")'); // Render blade template
-        $localizer->fetchTranslations(); // Fetch translations from database
+        Localizer::fetchTranslations(); // Fetch translations from database
         $rendered->assertSee('passed'); // Assert that rendered template contains the translation
     }
 

@@ -17,7 +17,7 @@ if (!function_exists('getCachedTranslation')) {
      */
     function getCachedTranslation($name, $locale = null): string
     {
-        return app("localizer")->translate($name, $locale);
+        return \ByPikod\Localization\Facades\Localizer::translate($name, $locale);
     }
 }
 
