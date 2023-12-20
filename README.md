@@ -108,10 +108,8 @@ See [How it works](#how-it-works) section for further information about the inno
 
 **ByPikod\LaravelLocalization** uses a unique method to fetch the translations from the database as I mentioned before. Here is how it works step by step:
 
-* First things first, Blade directive `@t` doesnt fetch the translations from the database directly. Instead it adds the key of the translation to a collection.
-* Then, it prints a php code that calls the global method `getCachedTranslation` with the key of the translation and the language code as parameters. But this code wont be executed until the blade template is completly rendered.
-* Once the blade template is completly rendered, the collection of the translation keys will be retrieved from the database with a single query to the database. Then, the `getCachedTranslation` method will be able to retrieve the translations from the cache.
-* After that, the document rendering process will start and getCachedTranslation functions in the blade templates will be executed. And the translations will be retrieved from the cache.
+* First things first, Blade directive `@t` doesnt fetch the translations from the database directly. Instead it adds the key of the translation to a collection and prints a php code that calls the global method `getCachedTranslation` with the key of the translation and the language code as parameters.
+* Once the package **"View"** renders the page and creates a PHP file for generated output, `getCachedTranslations` functions will called one by one. First function to be called will retrieve the translations from the database looking at the collection of translation keys that we created previous step with a single query. Following calls to the `getCachedTranslation` method will always return the translations from the cache.
 
 So any translation that is not used in the blade templates will not be retrieved from the database. And there wont be unnecessary queries to the database since the translations will be retrieved at once.
 
