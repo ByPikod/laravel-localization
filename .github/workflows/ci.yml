@@ -5,11 +5,15 @@ on: [push]
 jobs:
   build-test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
-    - uses: php-actions/composer@v6
-    # - name: PHP Unit
-    #  run: composer run-script test
+    - name: Install Dependencies
+      uses: php-actions/composer@v6
+      with:
+        php_version: '8.2'
+        args: --profile --ignore-platform-reqs
+        dev: no
+    - name: PHP Unit
+      run: composer run-script test
     - name: Lint
       run: composer run-script lint
